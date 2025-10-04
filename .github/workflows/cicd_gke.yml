@@ -58,8 +58,8 @@ jobs:
     environment: 'dev'
 
     permissions:
-      contents: 'read'
-      id-token: 'write'
+      contents: read
+      id-token: write
 
     steps:
       - name: 'Checkout'
