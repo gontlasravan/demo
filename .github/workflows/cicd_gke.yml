@@ -46,7 +46,8 @@ env:
   DEPLOYMENT_NAME: 'usermanagement-deployment' # TODO: update to your deployment name
   REPOSITORY: 'usermanagement' # TODO: update to your Artifact Registry docker repository name
   IMAGE: 'user-management-image'
-  WORKLOAD_IDENTITY_PROVIDER: '//iam.googleapis.com/projects/12999260081/locations/global/workloadIdentityPools/usermanagement-identitypool/providers/githubProvider'
+  WORKLOAD_IDENTITY_PROVIDER: 'https://iam.googleapis.com/projects/12999260081/locations/global/workloadIdentityPools/usermanagement-identitypool/providers/githubprovider'
+  #'//iam.googleapis.com/projects/12999260081/locations/global/workloadIdentityPools/usermanagement-identitypool/providers/githubProvider'
   #'principal://iam.googleapis.com/projects/12999260081/locations/global/workloadIdentityPools/usermanagement-identitypool/subject/SUBJECT_ATTRIBUTE_VALUE'
   #'principal://iam.googleapis.com/projects/12999260081/locations/global/workloadIdentityPools/usermanagement-identitypool/subject/usermanagement'
   #'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider' # TODO: update to your workload identity provider
@@ -75,6 +76,7 @@ jobs:
         uses: 'google-github-actions/auth@f112390a2df9932162083945e46d439060d66ec2' # google-github-actions/auth@v2
         with:
           audience: '${{ env.WORKLOAD_IDENTITY_PROVIDER }}'
+          create_credentials_file: true
           workload_identity_provider: '${{ env.WORKLOAD_IDENTITY_PROVIDER }}'
           service_account: '${{ env.SERVICE_ACCOUNT}}'
 
