@@ -46,7 +46,8 @@ env:
   DEPLOYMENT_NAME: 'usermanagement-deployment' # TODO: update to your deployment name
   REPOSITORY: 'usermanagement' # TODO: update to your Artifact Registry docker repository name
   IMAGE: 'user-management-image'
-  WORKLOAD_IDENTITY_PROVIDER: 'principal://iam.googleapis.com/projects/12999260081/locations/global/workloadIdentityPools/usermanagement-identitypool/subject/usermanagement'
+  WORKLOAD_IDENTITY_PROVIDER: 'principal://iam.googleapis.com/projects/12999260081/locations/global/workloadIdentityPools/usermanagement-identitypool/subject/SUBJECT_ATTRIBUTE_VALUE'
+  #'principal://iam.googleapis.com/projects/12999260081/locations/global/workloadIdentityPools/usermanagement-identitypool/subject/usermanagement'
   #'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider' # TODO: update to your workload identity provider
 
 jobs:
