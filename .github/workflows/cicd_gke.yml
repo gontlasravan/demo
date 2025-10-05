@@ -113,6 +113,7 @@ jobs:
       - name: Test Artifact Registry Access
         run: |
           gcloud artifacts repositories list --location=${{ env.GAR_LOCATION }}
+           echo "#####Docker tag: ${DOCKER_TAG}  #######"
           docker push "${DOCKER_TAG}"
 
       # Set up kustomize
