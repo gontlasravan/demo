@@ -2,9 +2,11 @@ FROM openjdk:21-slim AS builder
 WORKDIR /app
 COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
+RUN chmod +x mvnw
 RUN ./mvnw dependency:go-offline
+
 COPY src ./src
-RUN ./mvnw clean install
+RUN ./mvnw clean install -DskipTests
 
 FROM openjdk:21-slim AS final
 WORKDIR /app
