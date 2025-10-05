@@ -1,15 +1,14 @@
-# Use an official lightweight Java Runtime Environment (JRE) image
-FROM openjdk:21-slim
-
-# Set the working directory inside the container
+FROM openjdk:21-slim AS builder
 WORKDIR /app
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
+RUN ./mvnw dependency:go-offline
+COPY src ./src
+RUN ./mvnw clean install
 
-# Copy the application's JAR file from the Maven build's target directory
-# You must run 'mvn package' before building the Docker image
-COPY target/*.jar app.jar
-
-# The application is exposed on port 8080 (Spring Boot default)
+FROM openjdk:21-slim AS final
+WORKDIR /app
 EXPOSE 8080
+COPY --from=builder /app/target/*.jar /app/app.jar
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
 
-# The command to run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
