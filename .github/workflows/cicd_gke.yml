@@ -103,6 +103,8 @@ jobs:
             --build-arg GITHUB_SHA="${GITHUB_SHA}" \
             --build-arg GITHUB_REF="${GITHUB_REF}" \
             .
+
+            echo "Docker tag: ${DOCKER_TAG}"
       - name: Print GCloud Auth Info
         run: |
           gcloud auth list
