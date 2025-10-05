@@ -30,7 +30,6 @@
 #    https://cloud.google.com/iam/docs/manage-access-other-resources
 #
 # 5. Change the values in the "env" block to match your values.    
-
 name: 'Build and Deploy to GKE'
 
 on:
@@ -104,14 +103,14 @@ jobs:
             --build-arg GITHUB_SHA="${GITHUB_SHA}" \
             --build-arg GITHUB_REF="${GITHUB_REF}" \
             .
-- name: Print GCloud Auth Info
-  run: |
-    gcloud auth list
-    gcloud config list
+      - name: Print GCloud Auth Info
+        run: |
+          gcloud auth list
+          gcloud config list
 
-- name: Test Artifact Registry Access
-  run: |
-    gcloud artifacts repositories list --location=${{ env.GAR_LOCATION }}
+      - name: Test Artifact Registry Access
+        run: |
+          gcloud artifacts repositories list --location=${{ env.GAR_LOCATION }}
           docker push "${DOCKER_TAG}"
 
       # Set up kustomize
