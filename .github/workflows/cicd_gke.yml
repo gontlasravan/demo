@@ -75,9 +75,9 @@ jobs:
         with:
           #audience: 'https://iam.googleapis.com/projects/12999260081/locations/global/workloadIdentityPools/usermanagement-identitypool/providers/githubprovider'
           #create_credentials_file: true
-          token_format: 'access_token'
-          workload_identity_provider: '${{ env.WORKLOAD_IDENTITY_PROVIDER }}'
-          service_account: '${{ env.SERVICE_ACCOUNT}}'
+          #token_format: 'access_token'
+          workload_identity_provider: 'projects/12999260081/locations/global/workloadIdentityPools/usermanagement-identitypool/providers/githubprovider' #'${{ env.WORKLOAD_IDENTITY_PROVIDER }}'
+          service_account: 'usermanagement-gke-admin@usermanagement-474108.iam.gserviceaccount.com' #'${{ env.SERVICE_ACCOUNT}}'
 
       # Authenticate Docker to Google Cloud Artifact Registry
       - name: 'Docker Auth'
