@@ -73,8 +73,9 @@ jobs:
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@f112390a2df9932162083945e46d439060d66ec2' # google-github-actions/auth@v2
         with:
-          audience: 'https://iam.googleapis.com/projects/12999260081/locations/global/workloadIdentityPools/usermanagement-identitypool/providers/githubprovider'
-          create_credentials_file: true
+          #audience: 'https://iam.googleapis.com/projects/12999260081/locations/global/workloadIdentityPools/usermanagement-identitypool/providers/githubprovider'
+          #create_credentials_file: true
+          token_format: 'access_token'
           workload_identity_provider: '${{ env.WORKLOAD_IDENTITY_PROVIDER }}'
           service_account: '${{ env.SERVICE_ACCOUNT}}'
 
