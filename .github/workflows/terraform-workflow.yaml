@@ -1,20 +1,20 @@
-name: 'Terraform CI/CD'
+name: 'Terraform CI/CD - Artifact Registry'
 
-# 🚀 Triggers the workflow only when changes occur in the 'terraform/' directory
+# 🚀 Triggers the workflow only when changes occur in the 'terraform-scripts/' directory
 on:
   push:
     branches:
       - main
       - master
     paths:
-      - 'terraform/**' # <-- The critical path filter!
+      - 'terraform-scripts/**' # <-- Path filter updated to your folder
   pull_request:
     branches:
       - main
       - master
     paths:
-      - 'terraform/**'
-  
+      - 'terraform-scripts/**'
+
   # 💡 Optional: Allows manual execution from the GitHub Actions tab
   workflow_dispatch:
 
@@ -23,7 +23,7 @@ jobs:
     name: 'Terraform Plan and Apply'
     runs-on: ubuntu-latest
 
-    # This example assumes you are using GCP for authentication (e.g., to create resources)
+    # Define permissions required for checkout and WIF authentication
     permissions:
       contents: 'read'
       id-token: 'write' # Required for Workload Identity Federation (WIF)
@@ -35,44 +35,42 @@ jobs:
 
       # 2. Authenticate to Google Cloud (using Workload Identity Federation)
       # ⚠️ You MUST set up WIF in your repo secrets and in GCP for this to work.
+      # This step generates the short-lived access_token.
       - id: 'auth'
+        name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v2'
         with:
           # Replace with your actual WIF provider and Service Account details
           workload_identity_provider: 'projects/12999260081/locations/global/workloadIdentityPools/usermanagement-identitypool/providers/githubprovider'
           service_account: 'usermanagement-gke-admin@usermanagement-474108.iam.gserviceaccount.com'
-          # This step automatically provides a token for subsequent gcloud/terraform commands
 
       # 3. Setup Terraform
+      # The setup action will automatically use the GCP credentials provided by the 'auth' step.
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
-        with:
-          cli_config_credentials_token: ${{ steps.auth.outputs.access_token }}
 
-      # 4. Navigate to the Terraform directory
-      - name: Navigate to Terraform Directory
-        run: cd terraform
-
-      # 5. Initialize Terraform (downloads providers, sets up backend)
+      # 4. Initialize Terraform (downloads providers, sets up backend)
       - name: Terraform Init
         run: terraform init
-        working-directory: ./terraform # <-- Important: run from your terraform directory
+        working-directory: ./terraform-scripts # <-- Running command from the new folder
 
-      # 6. Validate Terraform syntax
+      # 5. Validate Terraform syntax
       - name: Terraform Validate
         run: terraform validate
-        working-directory: ./terraform
+        working-directory: ./terraform-scripts
 
-      # 7. Create a Terraform Execution Plan
-      # The plan is saved to a file which can be inspected later.
+      # 6. Create a Terraform Execution Plan
+      # The plan is saved to a file for subsequent use and review.
       - name: Terraform Plan
         run: terraform plan -input=false -out=tfplan.out
-        working-directory: ./terraform
+        working-directory: ./terraform-scripts
 
-      # 8. Apply changes (This part should be conditional or manual for safety!)
+      # 7. Apply changes (Conditional for safety)
       - name: Terraform Apply (Auto-Apply on main/master push only)
-        # 🛡️ Best Practice: Only auto-apply when pushing directly to main/master,
-        # otherwise require manual approval (e.g., a branch merge).
+        # 🛡️ This step ensures that 'apply' only runs if the change is merged or pushed
+        # directly to the main or master branch, preventing unintended changes from PRs.
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         run: terraform apply -input=false tfplan.out
-        working-directory: ./terraform
+        working-directory: ./terraform-scripts
+
+
